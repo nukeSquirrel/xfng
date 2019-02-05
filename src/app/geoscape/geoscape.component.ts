@@ -1,5 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {GeoscapeRendererService} from './geoscape-renderer.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'geoscape',
@@ -8,14 +7,9 @@ import {GeoscapeRendererService} from './geoscape-renderer.service';
 })
 export class GeoscapeComponent implements OnInit {
 
-  @ViewChild('container')
-  elementRef: ElementRef;
+  constructor() { }
 
-  constructor(private geoscapeRenderer: GeoscapeRendererService) { }
-
-  ngOnInit(): void {
-    this.geoscapeRenderer.container = this.elementRef.nativeElement;
+  ngOnInit() {
   }
-
 
 }

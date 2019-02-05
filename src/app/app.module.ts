@@ -17,9 +17,8 @@ import { ElectronService } from './providers/electron.service';
 import { WebviewDirective } from './directives/webview.directive';
 
 import { AppComponent } from './app.component';
-import { HomeComponent } from './components/home/home.component';
-import { GeoscapeComponent } from './geoscape/geoscape.component';
-import {GeoscapeRendererService} from './geoscape/geoscape-renderer.service';
+import {GeoscapeRendererService} from './geoscape/renderer/geoscape-renderer.service';
+import {GeoscapeModule} from './geoscape/geoscape.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -29,9 +28,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    WebviewDirective,
-    GeoscapeComponent
+    WebviewDirective
   ],
   imports: [
     BrowserModule,
@@ -44,7 +41,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory: (HttpLoaderFactory),
         deps: [HttpClient]
       }
-    })
+    }),
+    GeoscapeModule
   ],
   providers: [ElectronService, GeoscapeRendererService],
   bootstrap: [AppComponent]
