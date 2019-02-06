@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {OrbitControls} from '../../../lib/orbit-controls';
+import {BackSide} from 'three';
 
 export class GeoscapeScene {
 
@@ -67,7 +68,7 @@ export class GeoscapeScene {
     let mesh	= this.createEarth();
     this.scene.add(mesh);
 
-    this.scene.add(this.createPoint());
+    this.scene.add(this.createPoint(50.941357, 6.958307));
 
     this.lastTimeMsec = null;
     setInterval(() => {
@@ -111,7 +112,7 @@ export class GeoscapeScene {
     return mesh;
   }
 
-  private calcPosFromLatLonRad(lat, lon): [number, number, number] {
+  private calcPosFromLatLonRad(lat: number, lon: number): [number, number, number] {
     let phi = (90 - lat) * (Math.PI / 180);
     let theta = (lon + 180) * (Math.PI / 180);
 
@@ -122,16 +123,18 @@ export class GeoscapeScene {
     return [x, y, z];
   }
 
-  private createPoint() {
-    let position: [number, number, number] = this.calcPosFromLatLonRad(50.941357, 6.958307);
+  private createPoint(lat: number, lon: number) {
+    let position: [number, number, number] = this.calcPosFromLatLonRad(lat, lon);
 
-    let geometry	= new THREE.SphereGeometry(0.025, 20, 20);
+    let geometry	= new THREE.CircleGeometry(0.15, 8);
     let material	= new THREE.MeshBasicMaterial({
-      color: new THREE.Color('white')
+      color: 0x4444ff,
+      side: BackSide
     });
     let mesh = new THREE.Mesh(geometry, material);
 
     mesh.position.set(position[0], position[1], position[2]);
+    mesh.lookAt(new THREE.Vector3(0, 0, 0));
     return mesh;
   }
 
