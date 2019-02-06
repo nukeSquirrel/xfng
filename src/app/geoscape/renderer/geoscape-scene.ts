@@ -6,6 +6,7 @@ export class GeoscapeScene {
   private camera: THREE.Camera;
   private renderer: THREE.WebGLRenderer;
   private defaultElements = [];
+  private lastTimeMsec;
 
   constructor(container: HTMLElement) {
     let screen = {
@@ -13,44 +14,22 @@ export class GeoscapeScene {
       height : container.clientHeight
     };
     let view = {
-      angle  : 40,
+      angle  : 45,
       aspect : screen.width / screen.height,
-      near   : 0.1,
-      far    : 1 * 100 * 10
+      near   : 0.01,
+      far    : 100
     };
 
     this.scene = new THREE.Scene();
     this.renderer = new THREE.WebGLRenderer();
     this.camera = new THREE.PerspectiveCamera(view.angle, view.aspect, view. near, view.far);
-    // this.camera = new THREE.OrthographicCamera(-20 * view.aspect, 20 * view.aspect, 20, -20, view.near, view.far);
-    // let pointLight = new THREE.PointLight( 0xffffff );
-    // pointLight.position.set(1, 1, 2);
-    // this.camera.add(pointLight);
-
-    // IDEA: if there is much polution, add a smog effect
-    let light = new THREE.AmbientLight(0xffffff, 0.75);
-    this.scene.add(light);
-    this.defaultElements.push(light);
-
-    let light2 = new THREE.DirectionalLight(0xffffff, 0.95);
-    light2.position.x = 100;
-    light2.position.y = 65;
-    light2.position.z = 70; // not exactly diagonal!
-    // light2.shadow.bias = 0.001;
-    this.scene.add(light2);
-    this.defaultElements.push(light2);
-    let helper = new THREE.DirectionalLightHelper(light2);
-    this.scene.add(helper);
-    this.defaultElements.push(helper);
-    // let hemLight = new THREE.HemisphereLight(0xffffff, 0xccccff, 1);
-    // this.scene.add(hemLight);
-    // this.defaultElements.push(hemLight);
-
-    // Change perspective, so that X+Y become the "ground" and Z becomes the "height"
-    // this.camera.up = new THREE.Vector3( 0, 0, 1 );
 
     this.scene.add(this.camera);
     this.defaultElements.push(this.camera);
+
+    let light = new THREE.AmbientLight(0xffffff, 0.75);
+    this.scene.add(light);
+    this.defaultElements.push(light);
 
     let axesHelper = new THREE.AxesHelper(20);
     this.scene.add(axesHelper);
@@ -67,8 +46,25 @@ export class GeoscapeScene {
     this.scene.add(gridHelper);
     this.defaultElements.push(gridHelper);
 
+    let mesh	= this.createEarth();
+    this.scene.add(mesh);
+
+    this.lastTimeMsec = null;
+    requestAnimationFrame(this.animate);
+  }
+
+  animate = (nowMsec) => {
+    // keep looping
+    requestAnimationFrame(this.animate);
+
+    // measure time
+    this.lastTimeMsec = this.lastTimeMsec || nowMsec - 1000 / 60;
+    let deltaMsec = Math.min(200, nowMsec - this.lastTimeMsec);
+    this.lastTimeMsec = nowMsec;
+
     this.render();
   }
+
 
   centerCamera(blockX: number, blockY: number, x: number, y: number) {
     // console.log(`center cam ${blockX} ${blockY} ${x} ${y} `);
@@ -92,6 +88,7 @@ export class GeoscapeScene {
 
   render() {
     if (this.renderer) {
+      console.log('render');
       this.renderer.render(this.scene, this.camera);
     }
   }
@@ -108,4 +105,19 @@ export class GeoscapeScene {
     }
   }
 
+  private createEarth() {
+    // TODO move to a new renderer
+    let geometry	= new THREE.SphereGeometry(7.5, 64, 48);
+    // let material	= new THREE.MeshPhongMaterial({
+    //   map		: THREE.ImageUtils.loadTexture('http://i.imgur.com/puZgGjm.jpg'),
+    //
+    // })
+    let texture: THREE.Texture = new THREE.TextureLoader().load('../../../assets/img/earth-texture.jpg');
+
+    let material = new THREE.MeshPhongMaterial({map: texture, color: 0x4444FF});
+    let mesh = new THREE.Mesh(geometry, material);
+    // let mesh	= new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({wireframe: true, color: 0x4444FF}));
+
+    return mesh;
+  }
 }
