@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {OrbitControls} from '../../../lib/orbit-controls';
 
 export class GeoscapeScene {
 
@@ -8,8 +9,10 @@ export class GeoscapeScene {
   private defaultElements = [];
   private lastTimeMsec;
 
-  private rotate = true;
-  private rotateHorizontal = true;
+  private controls: OrbitControls;
+
+  private controlsListener = () => { this.render(); };
+
 
   constructor(container: HTMLElement) {
     let screen = {
@@ -41,6 +44,18 @@ export class GeoscapeScene {
     this.camera.position.set(12, 12, 12);
     this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
+    let controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls = controls;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.rotateSpeed = 0.35;
+    controls.zoomSpeed = 2.0;
+    controls.enablePan = false;
+
+    controls.update();
+    controls.addEventListener( 'change', this.controlsListener);
+
+
     this.renderer.setSize(screen.width, screen.height);
     container.appendChild(this.renderer.domElement);
 
@@ -54,20 +69,6 @@ export class GeoscapeScene {
 
     this.scene.add(this.createPoint());
 
-    document.addEventListener('mousedown', (ev: MouseEvent) => {
-
-      if (ev.button === 2) {
-        this.rotateHorizontal = ! this.rotateHorizontal;
-      } else if (ev.button === 0) {
-        this.rotate = false;
-      }
-    });
-    document.addEventListener('mouseup', (ev: MouseEvent) => {
-      if (ev.button === 0) {
-        this.rotate = true;
-      }
-    });
-
     this.lastTimeMsec = null;
     setInterval(() => {
       this.render();
@@ -75,37 +76,12 @@ export class GeoscapeScene {
     // requestAnimationFrame(this.animate);
   }
 
-  centerCamera(blockX: number, blockY: number, x: number, y: number) {
-    // console.log(`center cam ${blockX} ${blockY} ${x} ${y} `);
-    //
-    //
-    // let centerX = blockX * BLOCK_WIDTH_TOTAL_WIDTH + x * TILE_WIDTH;
-    // let centerY = 0;
-    // let centerZ = blockY * BLOCK_WIDTH_TOTAL_WIDTH + y * TILE_WIDTH;
-    // this.camera.position.set(
-    //   centerX + CAMERA_X,
-    //   centerY + CAMERA_HEIGHT,
-    //   centerZ + CAMERA_Y
-    // );
-    // this.camera.lookAt(new THREE.Vector3(
-    //   centerX,
-    //   centerY,
-    //   centerZ
-    // ));
-    // this.controls.update(); TODO: make this work
-  }
-
   render() {
     if (this.renderer) {
       console.log('render');
-      if (this.rotate) {
-        this.rotateCamera();
-      }
       this.renderer.render(this.scene, this.camera);
     }
   }
-
-
 
   clear() {
     if (this.scene) {
@@ -128,7 +104,7 @@ export class GeoscapeScene {
     // })
     let texture: THREE.Texture = new THREE.TextureLoader().load('../../../assets/img/earth-texture.jpg');
 
-    let material = new THREE.MeshPhongMaterial({map: texture, color: 0x4444FF});
+    let material = new THREE.MeshPhongMaterial({map: texture});
     let mesh = new THREE.Mesh(geometry, material);
     // let mesh	= new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({wireframe: true, color: 0x4444FF}));
 
@@ -159,15 +135,4 @@ export class GeoscapeScene {
     return mesh;
   }
 
-  private rotateCamera() {
-    let rotSpeed = 0.02;
-
-    this.camera.position.applyQuaternion(
-      new THREE.Quaternion().setFromAxisAngle(
-        new THREE.Vector3(0, -1, 0), // y-axis
-        12 / 1000 * 5 // 5/1000 per rendering.
-      ))
-    ;
-    this.camera.lookAt(this.scene.position);
-  }
 }
