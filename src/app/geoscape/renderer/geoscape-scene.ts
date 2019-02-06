@@ -8,6 +8,9 @@ export class GeoscapeScene {
   private defaultElements = [];
   private lastTimeMsec;
 
+  private rotate = true;
+  private rotateHorizontal = true;
+
   constructor(container: HTMLElement) {
     let screen = {
       width  : window.innerWidth,
@@ -35,36 +38,42 @@ export class GeoscapeScene {
     this.scene.add(axesHelper);
     this.defaultElements.push(axesHelper);
 
-    this.camera.position.set(10, 10, 10);
+    this.camera.position.set(12, 12, 12);
     this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     this.renderer.setSize(screen.width, screen.height);
     container.appendChild(this.renderer.domElement);
 
-    let gridHelper = new THREE.GridHelper(10 * 10, 10);
-    // gridHelper.rotateX(Math.PI / 2);
-    this.scene.add(gridHelper);
-    this.defaultElements.push(gridHelper);
+    // let gridHelper = new THREE.GridHelper(10 * 10, 10);
+    // // gridHelper.rotateX(Math.PI / 2);
+    // this.scene.add(gridHelper);
+    // this.defaultElements.push(gridHelper);
 
     let mesh	= this.createEarth();
     this.scene.add(mesh);
 
+    this.scene.add(this.createPoint());
+
+    document.addEventListener('mousedown', (ev: MouseEvent) => {
+
+      if (ev.button === 2) {
+        this.rotateHorizontal = ! this.rotateHorizontal;
+      } else if (ev.button === 0) {
+        this.rotate = false;
+      }
+    });
+    document.addEventListener('mouseup', (ev: MouseEvent) => {
+      if (ev.button === 0) {
+        this.rotate = true;
+      }
+    });
+
     this.lastTimeMsec = null;
-    requestAnimationFrame(this.animate);
+    setInterval(() => {
+      this.render();
+    }, 1000 / 25);
+    // requestAnimationFrame(this.animate);
   }
-
-  animate = (nowMsec) => {
-    // keep looping
-    requestAnimationFrame(this.animate);
-
-    // measure time
-    this.lastTimeMsec = this.lastTimeMsec || nowMsec - 1000 / 60;
-    let deltaMsec = Math.min(200, nowMsec - this.lastTimeMsec);
-    this.lastTimeMsec = nowMsec;
-
-    this.render();
-  }
-
 
   centerCamera(blockX: number, blockY: number, x: number, y: number) {
     // console.log(`center cam ${blockX} ${blockY} ${x} ${y} `);
@@ -89,9 +98,14 @@ export class GeoscapeScene {
   render() {
     if (this.renderer) {
       console.log('render');
+      if (this.rotate) {
+        this.rotateCamera();
+      }
       this.renderer.render(this.scene, this.camera);
     }
   }
+
+
 
   clear() {
     if (this.scene) {
@@ -119,5 +133,41 @@ export class GeoscapeScene {
     // let mesh	= new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({wireframe: true, color: 0x4444FF}));
 
     return mesh;
+  }
+
+  private calcPosFromLatLonRad(lat, lon): [number, number, number] {
+    let phi = (90 - lat) * (Math.PI / 180);
+    let theta = (lon + 180) * (Math.PI / 180);
+
+    let x = -(7.5 * Math.sin(phi) * Math.cos(theta));
+    let z = (7.5 * Math.sin(phi) * Math.sin(theta));
+    let y = (7.5 * Math.cos(phi));
+
+    return [x, y, z];
+  }
+
+  private createPoint() {
+    let position: [number, number, number] = this.calcPosFromLatLonRad(50.941357, 6.958307);
+
+    let geometry	= new THREE.SphereGeometry(0.025, 20, 20);
+    let material	= new THREE.MeshBasicMaterial({
+      color: new THREE.Color('white')
+    });
+    let mesh = new THREE.Mesh(geometry, material);
+
+    mesh.position.set(position[0], position[1], position[2]);
+    return mesh;
+  }
+
+  private rotateCamera() {
+    let rotSpeed = 0.02;
+
+    this.camera.position.applyQuaternion(
+      new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(0, -1, 0), // y-axis
+        12 / 1000 * 5 // 5/1000 per rendering.
+      ))
+    ;
+    this.camera.lookAt(this.scene.position);
   }
 }
