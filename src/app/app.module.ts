@@ -19,6 +19,7 @@ import { WebviewDirective } from './directives/webview.directive';
 import { AppComponent } from './app.component';
 import {GeoscapeRendererService} from './geoscape/renderer/geoscape-renderer.service';
 import {GeoscapeModule} from './geoscape/geoscape.module';
+import {EarthRendererService} from './geoscape/renderer/layers/earth-renderer.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -44,7 +45,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     GeoscapeModule
   ],
-  providers: [ElectronService, GeoscapeRendererService],
+  providers: [ElectronService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

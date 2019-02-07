@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import {OrbitControls} from '../../../lib/orbit-controls';
-import {BackSide} from 'three';
+import {OrbitControls} from '../../../../lib/orbit-controls';
 
 export class GeoscapeScene {
 
@@ -65,15 +64,10 @@ export class GeoscapeScene {
     // this.scene.add(gridHelper);
     // this.defaultElements.push(gridHelper);
 
-    let mesh	= this.createEarth();
-    this.scene.add(mesh);
-
-    this.scene.add(this.createPoint(50.941357, 6.958307));
-
-    this.lastTimeMsec = null;
-    setInterval(() => {
-      this.render();
-    }, 1000 / 25);
+    // this.lastTimeMsec = null;
+    // setInterval(() => {
+    //   this.render();
+    // }, 1000 / 25);
     // requestAnimationFrame(this.animate);
   }
 
@@ -94,48 +88,6 @@ export class GeoscapeScene {
         this.scene.add(de);
       }
     }
-  }
-
-  private createEarth() {
-    // TODO move to a new renderer
-    let geometry	= new THREE.SphereGeometry(7.5, 64, 48);
-    // let material	= new THREE.MeshPhongMaterial({
-    //   map		: THREE.ImageUtils.loadTexture('http://i.imgur.com/puZgGjm.jpg'),
-    //
-    // })
-    let texture: THREE.Texture = new THREE.TextureLoader().load('../../../assets/img/earth-texture.jpg');
-
-    let material = new THREE.MeshPhongMaterial({map: texture});
-    let mesh = new THREE.Mesh(geometry, material);
-    // let mesh	= new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({wireframe: true, color: 0x4444FF}));
-
-    return mesh;
-  }
-
-  private calcPosFromLatLonRad(lat: number, lon: number): [number, number, number] {
-    let phi = (90 - lat) * (Math.PI / 180);
-    let theta = (lon + 180) * (Math.PI / 180);
-
-    let x = -(7.5 * Math.sin(phi) * Math.cos(theta));
-    let z = (7.5 * Math.sin(phi) * Math.sin(theta));
-    let y = (7.5 * Math.cos(phi));
-
-    return [x, y, z];
-  }
-
-  private createPoint(lat: number, lon: number) {
-    let position: [number, number, number] = this.calcPosFromLatLonRad(lat, lon);
-
-    let geometry	= new THREE.CircleGeometry(0.15, 8);
-    let material	= new THREE.MeshBasicMaterial({
-      color: 0x4444ff,
-      side: BackSide
-    });
-    let mesh = new THREE.Mesh(geometry, material);
-
-    mesh.position.set(position[0], position[1], position[2]);
-    mesh.lookAt(new THREE.Vector3(0, 0, 0));
-    return mesh;
   }
 
 }
