@@ -1,0 +1,24 @@
+<div class="simcontrol-menu rounded">
+  <!-- Speed 1 / Pause: -->
+  <button (click)="togglePause()" class="btn toggle-pause" [ngClass]="{'active' : simSpeed >= simSpeedTypes.SPEED1}">
+    <i class="fas" [ngClass]="simSpeed===simSpeedTypes.PAUSE ? 'fa-play' : 'fa-pause'"></i>
+  </button>
+
+  <!-- Speed 1 / Pause: -->
+  <button (click)="simSpeed = simSpeedTypes.SPEED1" class="btn" [ngClass]="{'active' : simSpeed >= simSpeedTypes.SPEED1}">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+  <!-- Speed 2 / Pause: -->
+  <button (click)="simSpeed = simSpeedTypes.SPEED2" class="btn" [ngClass]="{'active' : simSpeed >= simSpeedTypes.SPEED2}">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+  <!-- Speed 3 / Pause: -->
+  <button (click)="simSpeed = simSpeedTypes.SPEED3" class="btn" [ngClass]="{'active' : simSpeed >= simSpeedTypes.SPEED3}">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+  <!-- Speed 4 / Pause: -->
+  <button (click)="simSpeed = simSpeedTypes.SPEED4" class="btn" [ngClass]="{'active' : simSpeed >= simSpeedTypes.SPEED4}">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+
+</div>

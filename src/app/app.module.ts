@@ -17,7 +17,7 @@ import { ElectronService } from './providers/electron.service';
 import { WebviewDirective } from './directives/webview.directive';
 
 import { AppComponent } from './app.component';
-import {GeoscapeRendererService} from './geoscape/renderer/geoscape-renderer.service';
+import {GeoscapeRendererService} from './geoscape/renderer/service/geoscape-renderer.service';
 import {GeoscapeModule} from './geoscape/geoscape.module';
 import {EarthRendererService} from './geoscape/renderer/layers/earth-renderer.service';
 

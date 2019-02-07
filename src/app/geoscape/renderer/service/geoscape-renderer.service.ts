@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {GeoscapeScene} from './util/geoscape-scene';
-import {EarthRendererService} from './layers/earth-renderer.service';
+import {GeoscapeScene} from '../util/geoscape-scene';
+import {EarthRendererService} from '../layers/earth-renderer.service';
 
 @Injectable()
 export class GeoscapeRendererService {

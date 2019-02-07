@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {GeoscapeRendererService} from './geoscape-renderer.service';
+import {GeoscapeRendererService} from './service/geoscape-renderer.service';
 
 @Component({
   selector: 'geoscape-renderer',
