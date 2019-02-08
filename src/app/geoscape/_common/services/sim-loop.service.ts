@@ -16,8 +16,14 @@ export class SimLoopService {
 
   private static readonly DEFAULT_SPEED: SimSpeed = SimSpeed.SPEED2;
 
+  /**
+   * Controls the Speed of the interval.
+   */
+  private static readonly LOOPS_PER_SECOND = 25;
+
   private _simSpeed = SimSpeed.PAUSE;
   private intervalId: number;
+  private millisSinceLastTick = 0;
 
   private game: Game;
 
@@ -25,8 +31,14 @@ export class SimLoopService {
     this.game = gameService.game;
   }
 
-  tick() {
-    this.game.tick(1);
+  loop() {
+    this.millisSinceLastTick += 1000 / SimLoopService.LOOPS_PER_SECOND;
+    let millisPerTick: number = 1000 / this._simSpeed;
+
+    if (this.millisSinceLastTick >= millisPerTick) {
+      this.game.tick(Math.round(this.millisSinceLastTick / millisPerTick));
+      this.millisSinceLastTick = this.millisSinceLastTick % millisPerTick;
+    }
   }
 
 
@@ -35,14 +47,12 @@ export class SimLoopService {
   }
 
   set simSpeed(value: SimSpeed) {
-    // TODO: use constant loop speed and alter tick-count instead!
     this._simSpeed = value;
     this.clearInterval();
     if (this._simSpeed !== SimSpeed.PAUSE) {
-      let ticksPerSec: number = this._simSpeed;
-      this.intervalId = setInterval(() => {
-        this.tick();
-      }, 1000 / ticksPerSec);
+      this.intervalId = window.setInterval(() => {
+        this.loop();
+      }, 1000 / SimLoopService.LOOPS_PER_SECOND);
     }
   }
 
