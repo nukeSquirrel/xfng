@@ -1,0 +1,50 @@
+@import "../../_common/colors";
+
+.simcontrol-menu {
+  position: absolute;
+  top: 0;
+
+  background: $grey-darkest;
+  border-bottom: 1px solid $blue;
+  border-right: 1px solid $blue;
+  padding: 0 8px 24px 0;
+
+  .current-date {
+    height: 24px;
+    color: $blue;
+    width: 100%;
+    text-align: center;
+  }
+
+  button.btn {
+    background: none;
+    color: $blue;
+    border-bottom: 1px solid $blue;
+
+    border-radius: 0;
+    box-shadow: none;
+
+    &.active {
+      background: $blue;
+      color: $grey-darkest;
+    }
+
+    &.toggle-pause {
+      border-radius: 0.25rem;
+      margin-right: 8px;
+    }
+
+    &:hover {
+      box-shadow: 0 0 0 0.2rem $blue;
+      border-radius: 0.25rem;
+    }
+
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+      border-radius 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition-property: color, background-color, border-color, border-radius, box-shadow;
+    transition-duration: 0.15s, 0.15s, 0.15s, 0.15s, 0.15s;
+    transition-timing-function: ease-in-out, ease-in-out, ease-in-out, ease-in-out, ease-in-out;
+    transition-delay: 0s, 0s, 0s, 0s, 0s;
+  }
+}
+
