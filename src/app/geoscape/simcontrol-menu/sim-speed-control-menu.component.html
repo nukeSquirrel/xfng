@@ -1,4 +1,6 @@
 <div class="simcontrol-menu rounded">
+  <div class="current-date">{{game.date | date: 'dd.MM.yyyy hh:mm'}}</div>
+
   <!-- Speed 1 / Pause: -->
   <button (click)="togglePause()" class="btn toggle-pause" [ngClass]="{'active' : simSpeed >= simSpeedTypes.SPEED1}">
     <i class="fas" [ngClass]="simSpeed===simSpeedTypes.PAUSE ? 'fa-play' : 'fa-pause'"></i>

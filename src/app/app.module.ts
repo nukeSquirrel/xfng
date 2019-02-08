@@ -1,25 +1,23 @@
 import 'reflect-metadata';
 import '../polyfills';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
 
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 
-import { AppRoutingModule } from './app-routing.module';
-
+import {AppRoutingModule} from './app-routing.module';
 // NG Translate
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
-import { ElectronService } from './providers/electron.service';
+import {ElectronService} from './_common/services/electron.service';
 
-import { WebviewDirective } from './directives/webview.directive';
+import {WebviewDirective} from './_common/directives/webview.directive';
 
-import { AppComponent } from './app.component';
-import {GeoscapeRendererService} from './geoscape/renderer/service/geoscape-renderer.service';
+import {AppComponent} from './app.component';
 import {GeoscapeModule} from './geoscape/geoscape.module';
-import {EarthRendererService} from './geoscape/renderer/layers/earth-renderer.service';
+import {GameService} from './_common/services/game.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -45,7 +43,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     GeoscapeModule
   ],
-  providers: [ElectronService],
+  providers: [ElectronService, GameService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
