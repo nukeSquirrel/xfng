@@ -11,6 +11,7 @@ export class GeoscapeRendererService {
 
   set container(container: HTMLElement) {
     this.geoscapeScene = new GeoscapeScene(container);
+    this.geoscapeScene.render();
     this.setupLayers();
     this.render();
   }
@@ -20,8 +21,8 @@ export class GeoscapeRendererService {
   }
 
   render() {
+    this.earthRenderer.update();
     this.geoscapeScene.render();
-    this.earthRenderer.render();
   }
 
 }

@@ -27,6 +27,7 @@ export class GeoscapeScene {
     };
 
     this.scene = new THREE.Scene();
+
     this.renderer = new THREE.WebGLRenderer();
     this.camera = new THREE.PerspectiveCamera(view.angle, view.aspect, view. near, view.far);
 
@@ -73,21 +74,21 @@ export class GeoscapeScene {
 
   render() {
     if (this.renderer) {
-      console.log('render');
+      // console.log('render');
       this.renderer.render(this.scene, this.camera);
     }
   }
-
-  clear() {
-    if (this.scene) {
-      while (this.scene.children.length > 0) {
-        this.scene.remove(this.scene.children[0]);
-      }
-
-      for (let de of this.defaultElements) {
-        this.scene.add(de);
-      }
-    }
-  }
+  //
+  // clear() {
+  //   if (this.scene) {
+  //     while (this.scene.children.length > 0) {
+  //       this.scene.remove(this.scene.children[0]);
+  //     }
+  //
+  //     for (let de of this.defaultElements) {
+  //       this.scene.add(de);
+  //     }
+  //   }
+  // }
 
 }

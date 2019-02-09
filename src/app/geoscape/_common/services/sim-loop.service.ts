@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import {GameService} from '../../../_common/services/game.service';
 import {Game} from '../../../../model/Game';
+import {GeoscapeRendererService} from '../../renderer/service/geoscape-renderer.service';
 
 export enum SimSpeed {
   // number x means "x ticks per second"
   PAUSE = 0,
   SPEED1 = 1,
-  SPEED2 = 5,
-  SPEED3 = 10,
-  SPEED4 = 25
+  SPEED2 = 7,
+  SPEED3 = 20,
+  SPEED4 = 50,
+  SPEED5 = 720 // develop only - 1 day GT in 2sec RT
 }
 
 @Injectable()
@@ -27,7 +29,7 @@ export class SimLoopService {
 
   private game: Game;
 
-  constructor(gameService: GameService) {
+  constructor(gameService: GameService, private geoscape: GeoscapeRendererService) {
     this.game = gameService.game;
   }
 
@@ -38,6 +40,7 @@ export class SimLoopService {
     if (this.millisSinceLastTick >= millisPerTick) {
       this.game.tick(Math.round(this.millisSinceLastTick / millisPerTick));
       this.millisSinceLastTick = this.millisSinceLastTick % millisPerTick;
+      this.geoscape.render();
     }
   }
 
