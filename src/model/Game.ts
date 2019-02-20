@@ -6,7 +6,7 @@ export class Game {
 
   private _date: Date = new Date('2032-03-26T11:30:00');
 
-  private ufoSpawner = new UfoService();
+  private ufoService = new UfoService();
 
   tick(count: number) {
     for (let i = 0; i < count; i++) {
@@ -16,7 +16,7 @@ export class Game {
 
   private singleTick() {
     this._date = new Date(this._date.getTime() + Game.TICK_DURATION_MINUTES * 60000);
-    this.ufoSpawner.tick();
+    this.ufoService.tick();
   }
 
   get date(): Date {

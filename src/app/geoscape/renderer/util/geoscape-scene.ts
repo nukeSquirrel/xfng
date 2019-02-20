@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import {OrbitControls} from '../../../../lib/orbit-controls';
 
+/**
+ * Wrapper for the ThreeJS scene for the Geoscape, containing all basic elements like camera, ThreeJS-Renderer, Mouse-Controls etc.
+ */
 export class GeoscapeScene {
 
   scene: THREE.Scene;
@@ -12,7 +15,6 @@ export class GeoscapeScene {
   private controls: OrbitControls;
 
   private controlsListener = () => { this.render(); };
-
 
   constructor(container: HTMLElement) {
     let screen = {

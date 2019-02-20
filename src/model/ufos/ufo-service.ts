@@ -1,11 +1,10 @@
-import {UfoRepo} from './ufo.repo';
+import {UFO_REPO} from './ufo.repo';
 import {Ufo} from './Ufo.entity';
 
 export class UfoService {
 
   private static readonly BASE_CHANCE = 0.15;
 
-  private ufoRepo = UfoRepo.instance;
   private nextChanceInTicks = 10;
 
   tick() {
@@ -19,12 +18,12 @@ export class UfoService {
     }
 
     let chance: number = UfoService.BASE_CHANCE;
-    if (this.ufoRepo.ufos.length > 0) {
-      chance /= 2 * this.ufoRepo.ufos.length;
+    if (UFO_REPO.ufos.length > 0) {
+      chance /= 2 * UFO_REPO.ufos.length;
     }
 
     if (Math.random() > 1 - chance) {
-      this.ufoRepo.ufos.push(new Ufo());
+      UFO_REPO.ufos.push(new Ufo());
       console.log('Creating new UFO!');
     }
 
@@ -33,7 +32,7 @@ export class UfoService {
   }
 
   private moveUfos() {
-    for (let ufo of this.ufoRepo.ufos) {
+    for (let ufo of UFO_REPO.ufos) {
       ufo.move();
     }
   }

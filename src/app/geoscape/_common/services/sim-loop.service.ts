@@ -15,6 +15,12 @@ export enum SimSpeed {
 
 @Injectable()
 export class SimLoopService {
+  /* At its core this service starts and stops a javascript interval,
+   * simulating the next ticks in the gameworld and rendering it in the geoscape.
+   *
+   * We keep the interval at a constant speed to get a constant FPS
+   * and vary the ticks per interval depending on the simSpeed settings.
+   */
 
   private static readonly DEFAULT_SPEED: SimSpeed = SimSpeed.SPEED2;
 
