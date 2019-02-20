@@ -1,9 +1,9 @@
 @import "../../_common/colors";
 
 .simcontrol-menu {
-  position: absolute;
-  top: 0;
+  display: inline-block;
 
+  opacity: 0.7;
   background: $grey-darkest;
   border-bottom: 1px solid $blue;
   border-right: 1px solid $blue;

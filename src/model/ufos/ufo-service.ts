@@ -8,11 +8,11 @@ export class UfoService {
   private nextChanceInTicks = 10;
 
   tick() {
-    this.createUfo();
+    this.spawnUfo();
     this.moveUfos();
   }
 
-  private createUfo() {
+  private spawnUfo() {
     if (this.nextChanceInTicks-- > 0) {
       return;
     }
@@ -23,7 +23,7 @@ export class UfoService {
     }
 
     if (Math.random() > 1 - chance) {
-      UFO_REPO.ufos.push(new Ufo());
+      UFO_REPO.add(new Ufo());
       console.log('Creating new UFO!');
     }
 

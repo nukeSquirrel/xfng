@@ -6,15 +6,18 @@ import {GeoscapeRendererService} from './renderer/service/geoscape-renderer.serv
 import {EarthRendererService} from './renderer/layers/earth-renderer.service';
 import { SimSpeedControlMenuComponent } from './simcontrol-menu/sim-speed-control-menu.component';
 import {SimLoopService} from './_common/services/sim-loop.service';
+import {UfoRendererService} from './renderer/layers/ufo-renderer.service';
+import { EventBarComponent } from './event-bar/event-bar.component';
 
 @NgModule({
-  declarations: [GeoscapeRendererComponent, GeoscapeComponent, SimSpeedControlMenuComponent],
+  declarations: [GeoscapeRendererComponent, GeoscapeComponent, SimSpeedControlMenuComponent, EventBarComponent],
   imports: [
     CommonModule
   ],
   exports: [
-    GeoscapeComponent
   ],
-  providers: [GeoscapeRendererService, EarthRendererService, SimLoopService]
+  providers: [
+    SimLoopService, GeoscapeRendererService, EarthRendererService, UfoRendererService,
+  ]
 })
 export class GeoscapeModule { }
