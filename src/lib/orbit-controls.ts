@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {Spherical, Vector2} from 'three';
 
 /* tslint:disable */
 
@@ -62,7 +63,7 @@ export class OrbitControls extends THREE.EventDispatcher {
   enableDamping: boolean;
   dampingFactor: number;
 
-  private spherical: THREE.Spherical;
+  private _spherical: THREE.Spherical;
   private sphericalDelta: THREE.Spherical;
   private scale: number;
   private target0: THREE.Vector3;
@@ -73,7 +74,7 @@ export class OrbitControls extends THREE.EventDispatcher {
   private zoomChanged: boolean;
 
   private rotateStart: THREE.Vector2;
-  private rotateEnd: THREE.Vector2;
+  private _rotateEnd: THREE.Vector2;
   private rotateDelta: THREE.Vector2
 
   private panStart: THREE.Vector2;
@@ -180,14 +181,14 @@ export class OrbitControls extends THREE.EventDispatcher {
     this.scale = 1;
 
     // current position in spherical coordinates
-    this.spherical = new THREE.Spherical();
+    this._spherical = new THREE.Spherical();
     this.sphericalDelta = new THREE.Spherical();
 
     this.panOffset = new THREE.Vector3();
     this.zoomChanged = false;
 
     this.rotateStart = new THREE.Vector2();
-    this.rotateEnd = new THREE.Vector2();
+    this._rotateEnd = new THREE.Vector2();
     this.rotateDelta = new THREE.Vector2();
 
     this.panStart = new THREE.Vector2();
@@ -235,15 +236,15 @@ export class OrbitControls extends THREE.EventDispatcher {
 
       if ( this.state === STATE.ROTATE ) {
         if ( this.enableRotate === false ) return;
-        this.rotateEnd.set( event.clientX, event.clientY );
-        this.rotateDelta.subVectors( this.rotateEnd, this.rotateStart );
+        this._rotateEnd.set( event.clientX, event.clientY );
+        this.rotateDelta.subVectors( this._rotateEnd, this.rotateStart );
         const element = this.domElement === document ? this.domElement.body : this.domElement;
 
         // rotating across whole screen goes 360 degrees around
         this.rotateLeft( 2 * Math.PI * this.rotateDelta.x / (element as any).clientWidth * this.rotateSpeed );
         // rotating up and down along whole screen attempts to go 360, but limited to 180
         this.rotateUp( 2 * Math.PI * this.rotateDelta.y / (element as any).clientHeight * this.rotateSpeed );
-        this.rotateStart.copy( this.rotateEnd );
+        this.rotateStart.copy( this._rotateEnd );
 
         this.update();
       } else if ( this.state === STATE.DOLLY ) {
@@ -376,8 +377,8 @@ export class OrbitControls extends THREE.EventDispatcher {
         case 1: {
           if ( this.enableRotate === false ) return;
           if ( this.state !== STATE.TOUCH_ROTATE ) return; // is this needed?...
-          this.rotateEnd.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
-          this.rotateDelta.subVectors( this.rotateEnd, this.rotateStart );
+          this._rotateEnd.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+          this.rotateDelta.subVectors( this._rotateEnd, this.rotateStart );
 
           var element = this.domElement === document ? this.domElement.body : this.domElement;
 
@@ -387,7 +388,7 @@ export class OrbitControls extends THREE.EventDispatcher {
           // rotating up and down along whole screen attempts to go 360, but limited to 180
           this.rotateUp( 2 * Math.PI * this.rotateDelta.y / (element as any).clientHeight * this.rotateSpeed );
 
-          this.rotateStart.copy( this.rotateEnd );
+          this.rotateStart.copy( this._rotateEnd );
 
           this.update();
         } break;
@@ -464,32 +465,32 @@ export class OrbitControls extends THREE.EventDispatcher {
     this.updateOffset.applyQuaternion( this.updateQuat );
 
     // angle from z-axis around y-axis
-    this.spherical.setFromVector3( this.updateOffset );
+    this._spherical.setFromVector3( this.updateOffset );
 
     if ( this.autoRotate && this.state === STATE.NONE ) {
       this.rotateLeft( this.getAutoRotationAngle() );
     }
 
-    (this.spherical as any).theta += (this.sphericalDelta as any).theta;
-    (this.spherical as any).phi += (this.sphericalDelta as any).phi;
+    (this._spherical as any).theta += (this.sphericalDelta as any).theta;
+    (this._spherical as any).phi += (this.sphericalDelta as any).phi;
 
     // restrict theta to be between desired limits
-    (this.spherical as (any) as any).theta = Math.max( this.minAzimuthAngle, Math.min( this.maxAzimuthAngle, (this.spherical as any).theta ) );
+    (this._spherical as (any) as any).theta = Math.max( this.minAzimuthAngle, Math.min( this.maxAzimuthAngle, (this._spherical as any).theta ) );
 
     // restrict phi to be between desired limits
-    (this.spherical as any).phi = Math.max( this.minPolarAngle, Math.min( this.maxPolarAngle, (this.spherical as any).phi ) );
+    (this._spherical as any).phi = Math.max( this.minPolarAngle, Math.min( this.maxPolarAngle, (this._spherical as any).phi ) );
 
-    this.spherical.makeSafe();
+    this._spherical.makeSafe();
 
-    (this.spherical as any).radius *= this.scale;
+    (this._spherical as any).radius *= this.scale;
 
     // restrict radius to be between desired limits
-    (this.spherical as any).radius = Math.max( this.minDistance, Math.min( this.maxDistance, (this.spherical as any).radius ) );
+    (this._spherical as any).radius = Math.max( this.minDistance, Math.min( this.maxDistance, (this._spherical as any).radius ) );
 
     // move target to panned location
     this.target.add( this.panOffset );
 
-    this.updateOffset.setFromSpherical( this.spherical );
+    this.updateOffset.setFromSpherical( this._spherical );
 
     // rotate offset back to "camera-up-vector-is-up" space
     this.updateOffset.applyQuaternion( this.updateQuatInverse );
@@ -610,11 +611,11 @@ export class OrbitControls extends THREE.EventDispatcher {
   }
 
   getPolarAngle (): number {
-    return (this.spherical as any).phi;
+    return (this._spherical as any).phi;
   }
 
   getAzimuthalAngle (): number {
-    return (this.spherical as any).theta;
+    return (this._spherical as any).theta;
   }
 
   dispose (): void {
@@ -659,6 +660,43 @@ export class OrbitControls extends THREE.EventDispatcher {
   set noZoom( value: boolean ) {
     console.warn( 'THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.' );
     this.enableZoom = ! value;
+  }
+
+
+  get spherical(): Spherical {
+    return this._spherical;
+  }
+
+  public lookAtSpherical(phi: number, theta: number) {
+    this.spherical.phi = phi;
+    this.spherical.theta = theta;
+
+    const position = this.object.position;
+    this.updateOffset.copy( position ).sub( this.target );
+    // this.updateOffset.applyQuaternion( this.updateQuat ); // rotate offset to "y-axis-is-up" space
+
+    // restrict theta to be between desired limits
+    (this._spherical as (any) as any).theta = Math.max( this.minAzimuthAngle, Math.min( this.maxAzimuthAngle, (this._spherical as any).theta ) );
+
+    // restrict phi to be between desired limits
+    (this._spherical as any).phi = Math.max( this.minPolarAngle, Math.min( this.maxPolarAngle, (this._spherical as any).phi ) );
+
+    this._spherical.makeSafe();
+
+    (this._spherical as any).radius *= this.scale;
+
+    // restrict radius to be between desired limits
+    (this._spherical as any).radius = Math.max( this.minDistance, Math.min( this.maxDistance, (this._spherical as any).radius ) );
+
+    this.updateOffset.setFromSpherical( this._spherical );
+
+    // rotate offset back to "camera-up-vector-is-up" space
+    // this.updateOffset.applyQuaternion( this.updateQuatInverse );
+
+    position.copy( this.target ).add( this.updateOffset );
+
+    this.object.lookAt( this.target );
+    this.scale = 1;
   }
 }
 

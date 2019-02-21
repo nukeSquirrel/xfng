@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import {OrbitControls} from '../../../../lib/orbit-controls';
+import {HasCoords} from '../../../../model/common/geo.api';
+import {calcPosFromLatLonRad, calcSphericalFromLatLon, normalize} from './coordinate-helpers';
+import {EARTH_RADIUS} from '../layers/earth-renderer.service';
 
 /**
  * Wrapper for the ThreeJS scene for the Geoscape, containing all basic elements like camera, ThreeJS-Renderer, Mouse-Controls etc.
@@ -93,4 +96,30 @@ export class GeoscapeScene {
   //   }
   // }
 
+  focus(geoObject: HasCoords) {
+    // let position: [number, number, number] = calcPosFromLatLonRad(geoObject.lat, geoObject.lng);
+    // this.camera.lookAt(new THREE.Vector3(position[0], position[1], position[2]));
+    console.log('norm:');
+    console.log(geoObject);
+    geoObject = normalize(geoObject);
+    console.log(geoObject);
+
+
+    let spherical = calcSphericalFromLatLon(geoObject.lat, geoObject.lng);
+    console.log(' - to sphere -> ');
+    console.log(spherical);
+    console.log('\n');
+
+    console.log(this.controls.spherical);
+    // this.controls.lookAtSpherical(90 * Math.PI / 180, 355 / 180 * Math.PI);
+    this.controls.lookAtSpherical(spherical.phi, spherical.theta);
+    console.log(this.controls.spherical);
+
+    // this.controls.update();
+
+    this.render();
+    // console.log(this.controls.spherical);
+    console.log('--------');
+    // TODO: rotate orbitcontrols so that position is in focus
+  }
 }

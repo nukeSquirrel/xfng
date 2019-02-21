@@ -11,7 +11,7 @@ import {UfoRendererService} from '../layers/ufo-renderer.service';
  */
 @Injectable()
 export class GeoscapeRendererService {
-  private geoscapeScene: GeoscapeScene;
+  private _geoscapeScene: GeoscapeScene;
 
   constructor(private earthRenderer: EarthRendererService, private ufoRenderer: UfoRendererService) {
   }
@@ -22,19 +22,23 @@ export class GeoscapeRendererService {
   }
 
   private initialize(container: HTMLElement) {
-    this.geoscapeScene = new GeoscapeScene(container);
+    this._geoscapeScene = new GeoscapeScene(container);
     this.setupLayers();
   }
 
   private setupLayers() {
-    this.earthRenderer.setup(this.geoscapeScene);
-    this.ufoRenderer.setup(this.geoscapeScene);
+    this.earthRenderer.setup(this._geoscapeScene);
+    this.ufoRenderer.setup(this._geoscapeScene);
   }
 
   render() {
     this.earthRenderer.update();
     this.ufoRenderer.update();
-    this.geoscapeScene.render();
+    this._geoscapeScene.render();
   }
 
+
+  get geoscapeScene(): GeoscapeScene {
+    return this._geoscapeScene;
+  }
 }

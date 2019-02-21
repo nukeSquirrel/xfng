@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import * as THREE from 'three';
 import {GeoscapeScene} from '../util/geoscape-scene';
 
+export const EARTH_RADIUS = 7.5;
 
 @Injectable()
 export class EarthRendererService {
@@ -20,7 +21,8 @@ export class EarthRendererService {
   }
 
   private createEarth(): THREE.Mesh {
-    let geometry = new THREE.SphereGeometry(7.5, 64, 48);
+    let geometry = new THREE.SphereGeometry(EARTH_RADIUS, 64, 48);
+    geometry.rotateY(-90 * Math.PI / 180);
     let texture: THREE.Texture = new THREE.TextureLoader().load('../../../assets/img/earth-texture.jpg');
 
     let material = new THREE.MeshPhongMaterial({map: texture});

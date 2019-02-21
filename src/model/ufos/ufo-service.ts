@@ -9,7 +9,7 @@ export class UfoService {
 
   tick() {
     this.spawnUfo();
-    this.moveUfos();
+    this.moveUfos(); // TODO split in two services, use singleton export const or something.
   }
 
   private spawnUfo() {
