@@ -41,7 +41,6 @@ export class MissionsWindowComponent implements ModalContent {
   }
 
   focusUfo(ufo: Ufo) {
-    console.log('focus');
     this.geoscapeRenderer.geoscapeScene.focus(ufo);
   }
 }
