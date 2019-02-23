@@ -7,3 +7,13 @@ html, body {
 
   height: 100%;
 }
+
+
+// TODO: this should be placed somewhere else, but shadow-dom behaviour makes things harder:
+.jw-modal-content {
+  .table {
+    td {
+      cursor: pointer;
+    }
+  }
+}

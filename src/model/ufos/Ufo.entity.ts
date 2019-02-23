@@ -11,6 +11,8 @@ export class Ufo implements HasCoords {
   private speedLat = -0.5 + Math.random();
   private speedLng = -0.5 + Math.random();
 
+  private readonly _discoverDate = new Date('2032-03-26T11:30:00'); // TODO real date
+
   constructor() {
     this._id = Ufo.nextId++;
   }
@@ -32,5 +34,9 @@ export class Ufo implements HasCoords {
 
   get lng(): number {
     return this._lng;
+  }
+
+  get discoverDate(): Date {
+    return this._discoverDate;
   }
 }

@@ -8,20 +8,13 @@ import {ModalService} from '../../_common/modals/modal.service';
   templateUrl: './event-bar.component.html',
   styleUrls: ['./event-bar.component.scss']
 })
-export class EventBarComponent implements OnInit {
+export class EventBarComponent {
   ufos = UFO_REPO.ufos;
 
-
-  constructor(private geoscapeRenderer: GeoscapeRendererService, private modalService: ModalService) {
-    // this.ufoCount = UFO_REPO.ufos.length;
+  constructor(private modalService: ModalService) {
   }
 
-  ngOnInit() {
-  }
-
-  focusFirst() {
-    console.log('focus');
+  openMissionsWindow() {
     this.modalService.open('missions-modal');
-    this.geoscapeRenderer.geoscapeScene.focus(this.ufos[0]);
   }
 }

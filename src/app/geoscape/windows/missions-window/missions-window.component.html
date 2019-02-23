@@ -1,3 +1,4 @@
 <div class="missions-window">
-  <ng2-smart-table [settings]="tableSettings" [source]="ufos"></ng2-smart-table>
+  <ng2-smart-table class="table" [settings]="tableSettings" [source]="ufos"
+    (userRowSelect)="selectUfo($event)"></ng2-smart-table>
 </div>
