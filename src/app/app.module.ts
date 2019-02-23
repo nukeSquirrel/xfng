@@ -18,6 +18,8 @@ import {WebviewDirective} from './_common/directives/webview.directive';
 import {AppComponent} from './app.component';
 import {GeoscapeModule} from './geoscape/geoscape.module';
 import {GameService} from './_common/services/game.service';
+import {ModalService} from './_common/modals/modal.service';
+import {ModalComponent} from './_common/modals/modal.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -43,7 +45,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     GeoscapeModule
   ],
-  providers: [ElectronService, GameService],
+  providers: [ElectronService, GameService, ModalService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

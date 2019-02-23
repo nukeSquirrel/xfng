@@ -38,6 +38,9 @@
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
   },
   "dependencies": {
+    "ng2-completer": "^2.0.8",
+    "ng2-smart-table": "^1.4.0",
+    "rxjs-compat": "^6.4.0",
     "three": "^0.101.1"
   },
   "devDependencies": {
